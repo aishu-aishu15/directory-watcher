@@ -221,19 +221,43 @@ func toJsonString(data []string) string {
 
 }
 
-func (d *DirWatcherService) GetAllTasks() ([]*models.TaskRuns, error) {
+func (d *DirWatcherService) GetAllTasks() ([]*TaskResponse, error) {
 	var items []*models.TaskRuns
+	var resp []*TaskResponse
 	result := d.db.Model(&models.TaskRuns{}).Find(&items)
 	if result.Error != nil {
 		return nil, result.Error
 	}
 
-	return items, nil
+	for _, item := range items {
+		var dirInfo DirInfo
+		if err := json.Unmarshal([]byte(item.DirInfo), &dirInfo); err != nil {
+			fmt.Println("Error while un marshalling directory info", err)
+
+		}
+		resp = append(resp, &TaskResponse{
+			Id:                    item.Id,
+			SystemId:              item.SystemId,
+			StartTime:             item.StartTime,
+			EndTime:               item.EndTime,
+			CreatedTime:           item.CreatedTime,
+			UpdatedTime:           item.UpdatedTime,
+			TotalMagicStringCount: item.TotalMagicStringCount,
+			MagicString:           item.MagicString,
+			DirInfo:               &dirInfo,
+			Status:                Status(item.Status),
+		})
+
+	}
+
+	return resp, nil
 
 }
 
 func (d *DirWatcherService) GetTaskById(id string) (*TaskResponse, error) {
-	var item *TaskResponse
+	var item *models.TaskRuns
+	var dirInfo DirInfo
+	var resp *TaskResponse
 	if err := d.db.Where("id = ?", id).First(&item).Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
 			return nil, NotFoundError{
@@ -247,7 +271,24 @@ func (d *DirWatcherService) GetTaskById(id string) (*TaskResponse, error) {
 		}
 	}
 
-	return item, nil
+	if err := json.Unmarshal([]byte(item.DirInfo), &dirInfo); err != nil {
+		fmt.Println("Error while un marshalling directory info", err)
+
+	}
+	resp = &TaskResponse{
+		Id:                    item.Id,
+		SystemId:              item.SystemId,
+		StartTime:             item.StartTime,
+		EndTime:               item.EndTime,
+		CreatedTime:           item.CreatedTime,
+		UpdatedTime:           item.UpdatedTime,
+		TotalMagicStringCount: item.TotalMagicStringCount,
+		MagicString:           item.MagicString,
+		DirInfo:               &dirInfo,
+		Status:                Status(item.Status),
+	}
+
+	return resp, nil
 
 }
 

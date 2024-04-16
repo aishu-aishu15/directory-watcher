@@ -14,9 +14,9 @@ type ConfigResponse struct {
 }
 
 type FileInfo struct {
-	FilesAdded   []string `json:"filesAdded"`
-	Files        []string `json:"files"`
-	FilesDeleted []string `json:"filesDeleted"`
+	FilesAdded   string `json:"filesAdded"`
+	Files        string `json:"files"`
+	FilesDeleted string `json:"filesDeleted"`
 }
 
 type DirInfo struct {
