@@ -103,7 +103,7 @@ func (a *Application) PeriodicTask() {
 		if latestTask != nil {
 			if latestTask.DirInfo != "" {
 				if err := json.Unmarshal([]byte(latestTask.DirInfo), &dirInfo); err != nil {
-					log.Fatal("unmarshalling dir info failed")
+					log.Fatal("un marshalling dir info failed")
 				}
 				if dirInfo.FileInfo != nil {
 					oldFiles = dirInfo.FileInfo.Files

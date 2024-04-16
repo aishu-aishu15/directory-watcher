@@ -19,7 +19,6 @@ type DirWatcherService struct {
 }
 
 func (d *DirWatcherService) ProcessTask(task *models.TaskRuns, oldFiles string) (*models.TaskRuns, error) {
-
 	var dirInfo models.DirInfo
 
 	if err := json.Unmarshal([]byte(task.DirInfo), &dirInfo); err != nil {
@@ -40,7 +39,7 @@ func (d *DirWatcherService) ProcessTask(task *models.TaskRuns, oldFiles string) 
 			FileInfo: &models.FileInfo{
 				FilesAdded:   "",
 				FilesDeleted: "",
-				Files:        dirInfo.FileInfo.Files,
+				Files:        toJsonString(filesInDirectory),
 			},
 		},
 	)
@@ -50,6 +49,7 @@ func (d *DirWatcherService) ProcessTask(task *models.TaskRuns, oldFiles string) 
 
 	if len(oldFiles) > 0 {
 		filesAdded, filesDeleted, err := d.GetFilesAddedAndDeleted(oldFiles, filesInDirectory)
+		fmt.Println("Files added and deleted", filesAdded, filesDeleted)
 		if err != nil {
 			return nil, err
 		}
@@ -59,7 +59,7 @@ func (d *DirWatcherService) ProcessTask(task *models.TaskRuns, oldFiles string) 
 				FileInfo: &models.FileInfo{
 					FilesAdded:   toJsonString(filesAdded),
 					FilesDeleted: toJsonString(filesDeleted),
-					Files:        dirInfo.FileInfo.Files,
+					Files:        toJsonString(filesInDirectory),
 				},
 			},
 		)
