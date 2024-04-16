@@ -78,13 +78,14 @@ func (a *Application) PeriodicTask() {
 		return
 	}
 	fmt.Printf("ID: %s", *systemId)
-	// default config is create to ensure task to start
+	// default config is created to ensure task to start
 	defaultConfig := "default-config"
 
 	for {
 
 		interval, directoryPath, magicString, err := a.GetConfig(systemId)
 		if err != nil {
+			fmt.Print("Fetching default configuration which is created to start the task initially Please Configure one")
 			interval, directoryPath, magicString, err = a.GetConfig(&defaultConfig)
 			if err != nil {
 				panic(err)

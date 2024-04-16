@@ -32,9 +32,24 @@ To configure the directory watcher task, provide the following inputs:
     - `"1s"`: One second.
 3. **Magic String**: The string to find occurrences in the watched directory. For example: `"jobs"`.
 
+## Note
+Created a default config to start the process initially, Please add configuration 
+
 ## Usage
 
 To start the directory watcher task, initiate the application. To stop the task, use the `"/shutdown"` endpoint or use keys (ctrl+c, ctrl+z).
+
+
+## DB schema
+## configurations DB
+| Field         | Type         | Null | Key | Default | Extra |
+|---------------|--------------|------|-----|---------|-------|
+| Id            | varchar(255) | NO   | PRI | NULL    |       |
+| Interval      | varchar(255) | YES  |     | NULL    |       |
+| DirectoryPath | varchar(255) | YES  |     | NULL    |       |
+| MagicString   | varchar(255) | YES  |     | NULL    |       |
+
+## task_runs DB
 
 
 
